@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+sourceCompatibility = 1.8
+
+group 'xyz.hurrhnn'
+version '1.0'
+
+mainClassName = "Main"
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+
+dependencies {
+    compile 'org.jsoup:jsoup:1.13.1'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.44.0'
+}
