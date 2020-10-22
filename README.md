@@ -49,10 +49,10 @@
    Downloading modules at /tmp/youtube-dl
    
    Starting download videos.
-   1. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/아픈 삼색이.mp4 - Done!
-   2. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/고양이 평균 수명.mp4 - Done!
-   3. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/사람 나이로 몇 살.mp4 - Done!
-   4. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/장수 비결 9가지.mp4 - Done!
+   1. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/아픈 삼색이.mp4" - Done!
+   2. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/고양이 평균 수명.mp4" - Done!
+   3. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/사람 나이로 몇 살.mp4" - Done!
+   4. Downloading at "우리 고양이는 사람 나이로 몇 살/삼색이가 200살까지 장수한 비법/장수 비결 9가지.mp4" - Done!
    Downloaded all downloadable videos!
    ```
 
