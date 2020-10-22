@@ -469,6 +469,7 @@ public class Main {
                 System.out.println("Download Failed - FFmpeg, Exit.");
                 return;
             }
+            new File(tmpFolderPath + System.getProperty("file.separator") + (detectOS().equals("Windows") ? "ffmpeg.exe" : "ffmpeg")).setExecutable(true);
         } else System.out.println("FFmpeg already downloaded.");
 
         if (!new File(tmpFolderPath + System.getProperty("file.separator") + (detectOS().equals("Windows") ? "youtube-dl.exe" : "youtube-dl")).exists()) {
@@ -476,6 +477,7 @@ public class Main {
                 System.out.println("Download Failed - youtube-dl, Exit.");
                 return;
             }
+            new File(tmpFolderPath + System.getProperty("file.separator") + (detectOS().equals("Windows") ? "youtube-dl.exe" : "youtube-dl")).setExecutable(true);
         } else System.out.println("youtube-dl already downloaded.");
 
         int cnt = 0;
