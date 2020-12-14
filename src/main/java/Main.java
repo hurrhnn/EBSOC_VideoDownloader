@@ -434,8 +434,9 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, ParseException, ScriptException, URISyntaxException, InterruptedException {
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("EBS Online Class Video Downloader V1.0\n");
 
+        Scanner scanner = new Scanner(System.in);
         boolean isTestMode = false;
         if (args.length > 0)
             if (args[0].equals("TESTMODE=1")) isTestMode = true;
