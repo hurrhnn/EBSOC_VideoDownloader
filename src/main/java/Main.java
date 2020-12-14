@@ -151,9 +151,9 @@ public class Main {
             area = "용산구";
             schoolName = "선린인터넷고등학교";
         } else {
-            System.out.print("Please enter the school area: ");
+            System.out.print("Please enter the school area (Ex. 용산구): ");
             area = scanner.nextLine().trim();
-            System.out.print("Please enter the name of the school: ");
+            System.out.print("Please enter the name of the school (Ex. 선린인터넷고등학교): ");
             schoolName = scanner.nextLine().trim();
         }
 
@@ -310,7 +310,7 @@ public class Main {
         System.out.print("\nLecture> ");
         int lectureNumber = scanner.nextInt();
 
-        System.out.print("Parsing... please wait.");
+        System.out.print("Parsing... please wait.\n");
         lectureName = lectureNameArray[lectureNumber - 1];
 
         URL lectureSite = new URI(selectLecturePage[lectureNumber - 1].toString()).toURL();
@@ -387,15 +387,15 @@ public class Main {
                 else jsonVideoObject = (JSONObject) jsonRootArray.get(0);
 
                 String parsedLink = !(jsonVideoObject.get("src").toString().contains("http://")) ? "" : lectures.get(i).getElementsByClass("txt").text() + "\u200B" + jsonVideoObject.get("src").toString();
-                if (!(parsedLink.equals("") || parsedLink.isEmpty())) videosInfo.add(parsedLink);
+                if (!(parsedLink.equals("") || parsedLink.isEmpty())) {
+                    videosInfo.add(parsedLink);
+                }
             } catch (NullPointerException e) {
-
                 String parsedLink = lectures.get(i).getElementsByClass("txt").text() + "\u200B" + videoScriptString.substring(videoScriptString.indexOf("https://www.youtube.com"), videoScriptString.indexOf("?enablejsapi=1&rel=0&autoplay=1\"")).replace("embed/", "watch?v=");
                 videosInfo.add(parsedLink);
             } catch (Exception ignored) {
             }
         }
-
         return videosInfo;
     }
 
@@ -447,6 +447,10 @@ public class Main {
         String schoolLink = "https://" + jsonSchool.get("host") + ".ebssw.kr/";
         Map<String, String> sessionCookie = login(scanner, schoolLink, isTestMode);
 
+        parseAndDownload(scanner, sessionCookie, jsonSchool, schoolLink);
+    }
+
+    public static void parseAndDownload(Scanner scanner, Map<String, String> sessionCookie, JSONObject jsonSchool, String schoolLink) throws IOException, URISyntaxException, InterruptedException {
         String selectLecturePage = parseSelectLecturePage(scanner, sessionCookie, jsonSchool, schoolLink);
         Jsoup.parse(selectLecturePage);
 
@@ -483,14 +487,22 @@ public class Main {
         int cnt = 0;
         System.out.println("\nStarting download videos.");
         for (String videoInfo : videosInfo) {
-            File downloadFolder = new File(classroomName + System.getProperty("file.separator") + lectureName);
+            File downloadFolder = new File(classroomName + System.getProperty("file.separator") + lectureName.replaceAll("[\\\\/:*?\"<>|]", "_"));
             if (!downloadFolder.exists()) {
                 if (downloadFolder.mkdirs())
                     onDownloadReady(tmpFolderPath + System.getProperty("file.separator") + (detectOS().equals("Windows") ? "youtube-dl.exe" : "youtube-dl"), videoInfo, downloadFolder, ++cnt);
-            } else onDownloadReady(tmpFolderPath + System.getProperty("file.separator") + (detectOS().equals("Windows") ? "youtube-dl.exe" : "youtube-dl"), videoInfo, downloadFolder, ++cnt);
+            } else
+                onDownloadReady(tmpFolderPath + System.getProperty("file.separator") + (detectOS().equals("Windows") ? "youtube-dl.exe" : "youtube-dl"), videoInfo, downloadFolder, ++cnt);
         }
 
-        System.out.println("Downloaded all downloadable videos!");
+        System.out.println("Downloaded all downloadable videos!\n");
+        System.out.print("Would you want to download another videos? [Y/N]: ");
+        scanner = new Scanner(System.in);
+
+        if (scanner.nextLine().toLowerCase().charAt(0) == 'y')
+            parseAndDownload(scanner, sessionCookie, jsonSchool, schoolLink);
+        else
+            System.out.println("Good bye~");
     }
 
     public static File[] listFilesMatching(File fileName, String regexString) {
@@ -504,9 +516,9 @@ public class Main {
 
         if (videoURL.contains("youtube.com")) {
             File chkFile = new File(downloadFolder.getPath() + System.getProperty("file.separator") + "chk_file");
-            if(chkFile.createNewFile()) {
-                for(File file : Objects.requireNonNull(downloadFolder.listFiles())) {
-                    if(file.getName().trim().contains(new File(videoName).getName().trim()) || new File(videoName).getName().trim().contains(file.getName().trim())) {
+            if (chkFile.createNewFile()) {
+                for (File file : Objects.requireNonNull(downloadFolder.listFiles())) {
+                    if (file.getName().trim().contains(new File(videoName).getName().trim()) || new File(videoName).getName().trim().contains(file.getName().trim())) {
                         System.out.println(videoCount + ". Exists video. Skip download - " + videoName);
                         chkFile.delete();
                         return;
@@ -515,7 +527,7 @@ public class Main {
             }
             chkFile.delete();
 
-            String[] command = new String[] {new File(tmpFolderPath).getPath(), "--user-agent", "\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36\"", "-f", "best", "-o", "downloading.%(ext)s", videoURL};
+            String[] command = new String[]{new File(tmpFolderPath).getPath(), "--user-agent", "\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36\"", "-f", "best", "-o", "downloading.%(ext)s", videoURL};
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             Process process = processBuilder.start();
 
@@ -534,8 +546,8 @@ public class Main {
             File[] files = listFilesMatching(new File(relativePath.toAbsolutePath().toString()), "downloading.*");
 
             File file = (File) Arrays.stream(files).toArray()[0];
-            File renameTo = new File( downloadFolder.getPath() + System.getProperty("file.separator") + videoName.replaceAll("[\\\\:*?\"<>|]", "") + file.getName().substring(file.getName().indexOf(".")));
-            if(file.exists()) {
+            File renameTo = new File(downloadFolder.getPath() + System.getProperty("file.separator") + videoName.replaceAll("[\\\\/:*?\"<>|]", "_") + file.getName().substring(file.getName().indexOf(".")));
+            if (file.exists()) {
                 if (file.renameTo(renameTo)) {
                     System.out.print(videoCount + ". Downloading at \"" + downloadFolder.getPath() + System.getProperty("file.separator") + renameTo.getName());
                     System.out.println(" - Done!");
@@ -543,7 +555,7 @@ public class Main {
             }
             Thread.sleep(1000);
         } else {
-            videoName += ".mp4";
+            videoName = videoName.replaceAll("[\\\\/:*?\"<>|]", "_") + ".mp4";
             File videoFile = new File(downloadFolder.getPath() + System.getProperty("file.separator") + videoName);
             if (videoFile.createNewFile()) {
                 System.out.print(videoCount + ". Downloading at \"" + downloadFolder.getPath() + System.getProperty("file.separator") + videoName + "\"");
