@@ -1,4 +1,5 @@
 # EBSOC_VideoDownloader
+**Important: EBS 온라인 클래스의 리뉴얼로 인해 지원 중단됨.<br><br>**
 더 많은 내신을 위한 EBS 온클 동영상 다운로더<br>
 
 ## 사용법
